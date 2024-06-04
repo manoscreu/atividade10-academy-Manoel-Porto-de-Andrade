@@ -27,8 +27,14 @@ ${buttonFinalDate}       br.com.pztec.estoque:id/data2
 ${calendario}            android:id/month_view
 ${dataInicio}            ${prefixoBotoes}    [@content-desc="02 June 2024"]
 ${dataFim}               ${prefixoBotoes}    [@content-desc="30 June 2024"]
-${buttonOkCalendario}    android:id/button1
+${buttonOk}              android:id/button1
 ${buttonPesquisa}        android:id/search_button
+${buttonAddAmount}       br.com.pztec.estoque:id/entrada
+${buttonDecAmount}       br.com.pztec.estoque:id/saida
+${buttonEdit}            br.com.pztec.estoque:id/editar
+${buttonDelete}          br.com.pztec.estoque:id/deletar
+${buttonSaveAmount}      br.com.pztec.estoque:id/btn_salvar
+
 
 
 #Campos input de texto
@@ -38,6 +44,9 @@ ${campoPacking}          br.com.pztec.estoque:id/txt_unidade
 ${campoAmount}           br.com.pztec.estoque:id/txt_quantidade
 ${campoUnitValue}        br.com.pztec.estoque:id/txt_valunit
 ${campoLot}              br.com.pztec.estoque:id/txt_lote
+${inputQuantEntrada}       br.com.pztec.estoque:id/txt_qtdentrada
+${inputQuantSaida}       br.com.pztec.estoque:id/txt_qtdsaida
+
 
 
 #Faker
@@ -56,6 +65,8 @@ ${textoMessage}          android:id/message
 ${share}                 android:id/title
 ${nomePdf}               android:id/content_preview_filename
 ${textoPdfGerado}        //android.widget.TextView[@resource-id="br.com.pztec.estoque:id/datafile"]
+${textoQuantAtual}       br.com.pztec.estoque:id/txt_qtdatual
+${item1}                 (//android.widget.LinearLayout[@resource-id="br.com.pztec.estoque:id/linha_parte1"])[1]
 
 
 
@@ -72,6 +83,61 @@ Dado que o usuario se encontra na tela inicial do App
 
 Dado que ja existe um produto cadastrado no sistema
     Wait Until Element Is Visible    ${buttonPesquisa}
+    Click Element    ${buttonNew}
+    Wait Until Element Is Visible    ${campoCode} 
+    Input Text                       ${campoCode}           001
+    Input Text                       ${campoDescription}    Chicletes
+    Input Text                       ${campoPacking}        Caixa com 100
+    Input Text                       ${campoAmount}         10
+    Input Text                       ${campoUnitValue}      20
+    Input Text                       ${campoLot}            001
+    Click Element                    ${buttonSave}
+    Wait Until Element Is Visible    ${buttonSearch}
+
+
+Quando o usuario usar a opção de excluir um produto
+    Clica e espera    ${buttonDelete}    ${message}
+
+Entao o sistema deve apresentar uma mensagem pedindo confimaçao da exclusao
+    Element Should Contain Text    ${message}         Message
+    Element Should Contain Text    ${textoMessage}    Delete?
+    Click Element    ${buttonOk}
+
+E o sistema deve excluir o produto do estoque
+    Wait Until Element Is Visible    ${buttonSearch}
+
+Quando o usuario acessar a area de edição de produto
+    Clica e espera    ${buttonEdit}    ${campoCode}
+
+E alterar o cadastro do produto
+    Clear Text    ${campoDescription}
+    Input Text    ${campoDescription}    Abacate
+
+
+Dado que ja existam mais de um produto cadastrado no sistema
+    [Arguments]    ${codigo}    ${descricao}    ${unidade}    ${quantidade}    ${valor}    ${lote}=
+    Wait Until Element Is Visible    ${buttonNew}
+    Click Element    ${buttonNew}
+    Input Text    ${campoCode}    ${codigo}
+    Input Text    ${campoDescription}    ${descricao}
+    Input Text    ${campoPacking}    ${unidade}
+    Input Text    ${campoAmount}    ${quantidade}
+    Input Text    ${campoUnitValue}    ${valor}
+    Input Text    ${campoLot}    ${lote}
+    Click Element    ${buttonSave}
+    Wait Until Element Is Visible    ${buttonSearch}
+    Element Should Contain Text    //android.widget.TextView[@text='${descricao}']    ${descricao}
+
+E finalizar a alteraçao
+    Clica e espera    ${buttonSave}    ${buttonSearch}
+
+Entao o sistema deve apresentar o produto atualizado
+    Element Should Contain Text    ${campoDescription}    Abacate
+Quando o usuario acessar a opçao de aumentar a quantidade no sistema
+    Clica e espera    ${buttonAddAmount}    ${textoQuantAtual}
+
+Quando o usuario acessar a opçao de diminuir a quantidade no sistema
+    Clica e espera    ${buttonDecAmount}    ${textoQuantAtual}
 
 Quando o usuario acessar a area report
     Clica e espera    ${buttonReport}    ${buttonInventory}
@@ -82,6 +148,26 @@ E acessar a area de entradas
 E acessar a area de estoque
     Clica e espera    ${buttonInventory}    ${buttonGerarPDF}
 
+E preencher com a quantidade a aumentar
+    Input Text    ${inputQuantEntrada}    10
+
+E preencher com a quantidade a diminuir
+    Input Text    ${inputQuantSaida}    10
+
+E preencher com a quantidade a diminuir que fique abaixo de 0
+    Input Text    ${inputQuantSaida}    15
+
+E confirmar a operaçao de mudança de estoque
+    Click Element    ${buttonSaveAmount}    
+
+Entao o sistema deve apresentar o novo valor maior
+    Wait Until Element Is Visible    ${buttonSearch}
+    Element Should Contain Text    ${campoAmount}    20
+
+Entao o sistema deve apresentar o novo valor menor
+    Wait Until Element Is Visible    ${buttonSearch}
+    Element Should Contain Text    ${campoAmount}    0
+
 E acessar a area de saidas
     Clica e espera    ${buttonOuts}    ${buttonGerarPDF}
 E usar a função de gerar pdf sem inserir datas
@@ -90,14 +176,6 @@ E usar a função de gerar pdf sem inserir datas
 Quando o usuario acessar a area de cadastro de produtos
     Click Element    ${buttonNew}
     Wait Until Element Is Visible    br.com.pztec.estoque:id/txt_descricao 
-    Input Text                       ${campoCode}           001
-    Input Text                       ${campoDescription}    Chicletes
-    Input Text                       ${campoPacking}        Caixa com 100
-    Input Text                       ${campoAmount}         10
-    Input Text                       ${campoUnitValue}      20
-    Input Text                       ${campoLot}            001
-    Click Element                    ${buttonSave}
-    Wait Until Element Is Visible    ${buttonSearch}
 
 
 E preencher todos os Campos e confirmar o cadastro
@@ -118,10 +196,10 @@ E confirmar o cadastro
 E usar a função de gerar pdf inserindo datas
     Clica e espera    ${buttonStartDate}        ${calendario} 
     Click Element     ${dataInicio}
-    Clica e espera    ${buttonOkCalendario}     ${buttonFinalDate}
+    Clica e espera    ${buttonOk}     ${buttonFinalDate}
     Clica e espera    ${buttonFinalDate}        ${calendario}
     Click Element     ${dataFim}
-    Clica e espera    ${buttonOkCalendario}     ${buttonFinalDate}
+    Clica e espera    ${buttonOk}     ${buttonFinalDate}
     Click Element     ${buttonGerarPDF}
     Wait Until Element Is Visible               ${textoPdfGerado}
 
@@ -146,7 +224,9 @@ Entao o pdf de entradas deve ser gerado com sucesso
     Element Should Be Visible       ${textoPdfGerado}
     Element Should Contain Text     ${textoPdfGerado}   stockentries.pdf generated in
     
-
+Entao o sistema deve apresentar uma mensagem com erro estoque insuficiente
+    Element Should Contain Text     ${message}         Message
+    Element Should Contain Text     ${textoMessage}    Insufficient stock
 Entao o sistema deve apresentar uma mensagem de erro 
     Element Should Contain Text     ${message}         Message
     Element Should Contain Text     ${textoMessage}    Please select a date range.
