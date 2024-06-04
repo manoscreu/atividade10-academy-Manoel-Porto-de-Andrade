@@ -314,8 +314,7 @@ Entao o sistema deve apresentar apenas o produto que condiz com o nome
 Deve ser possivel cadastrar varios produtos
     [Arguments]    ${codigo}    ${descricao}    ${unidade}    ${quantidade}    ${valor}    ${lote}=
     Wait Until Element Is Visible    ${buttonNew}
-    Click Element    ${buttonNew}
-    Wait Until Element Is Visible ${campoDescription}
+    Clica e espera   ${buttonNew}    ${buttonSave}
     Input Text    ${campoCode}    ${codigo}
     Input Text    ${campoDescription}    ${descricao}
     Input Text    ${campoPacking}    ${unidade}
