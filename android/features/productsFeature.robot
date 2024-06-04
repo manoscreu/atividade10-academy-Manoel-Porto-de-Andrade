@@ -51,17 +51,21 @@ TC006 - Deve ser possivel editar o cadastro de um produto
     Entao o sistema deve apresentar o produto atualizado
 
 
-TC007 - Deve ser possivel pesquisar um produto
-    [Template]    Dado que ja existam mais de um produto cadastrado no sistema
-        001    Teclado Games    caixa com 1    44    800    01
-        002    Monitor Acer    caixa com 1    12    1500    02
-        003    Headset da xuxa    caixa com 1    800    10    02
-    Quando o usuario ativar a opçao de pesquisa
-    E pesquisar pelo nome de um produto cadastrado
-    Entao o sistema deve apresentar apenas o produto que condiz com o nome
 
-TC008 - Deve ser possivel excluir um item do sistema
+TC007 - Deve ser possivel excluir um item do sistema
     Dado que ja existe um produto cadastrado no sistema
     Quando o usuario usar a opção de excluir um produto
     Entao o sistema deve apresentar uma mensagem pedindo confimaçao da exclusao
     E o sistema deve excluir o produto do estoque
+TC008 - Deve ser possivel cadastrar varios produtos
+    [Template]    Deve ser possivel cadastrar varios produtos
+        001    Teclado Games    1un    44    800    01
+        002    Monitor Acer    1un    12    1500    02
+        003    Headset da xuxa    1un   800    10    03
+        004    Placa de video quebrada   1un  10    5000    04
+
+TC009 - Deve ser possivel pesquisar por um produto cadastrado
+    Dado que ja existe mais de um produto cadastrado no sistema
+    Quando o usuario ativar a opçao de pesquisa
+    E pesquisar pelo nome de um produto cadastrado
+    Entao o sistema deve apresentar apenas o produto que condiz com o nome
