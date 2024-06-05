@@ -11,7 +11,7 @@ TC001 - Cadastro valido de produto
     E preencher todos os Campos e confirmar o cadastro
     Entao o sistema deve realizar o cadastro do produto
 
-TC002 - Cadastro invalido de protudo
+TC002 - Cadastro invalido de produto
     Dado que o usuario se encontra na tela inicial do App
     Quando o usuario acessar a area de cadastro de produtos
     E confirmar o cadastro
